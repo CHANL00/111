@@ -1,0 +1,29 @@
+#include<stdio.h>
+#define MAX 100
+int fmax(int a[],int d,int n)
+{
+	int i,sum=0,max=0;
+	for(i=d;i<n;i++)
+	{
+		sum+=a[i];
+		if(max<sum) max=sum;
+	}
+	return max;
+}
+int main()
+{
+	int a[MAX],i,n,d=0,wz=0,max=0,sum=0;
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+	scanf("%d",&a[i]);
+	for(i=0;i<n;i++)
+	{
+		sum=fmax(a,i,n);
+		if(max<sum) max=sum;
+	}
+	sum=max;
+	if(sum<0) printf("0");
+	else
+	printf("%d",sum);
+	return 0;
+}
