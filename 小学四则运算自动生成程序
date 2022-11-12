@@ -25,7 +25,8 @@ void showMenu()
 	printf("||   3、设置最大限制   ||\n");
 	printf("||   4、设置是否小数   ||\n");
 	printf("||   5、设置有小括号   ||\n");
-	printf("||   6、生成运算题目   ||\n");
+	printf("||   6、设置输出方式   ||\n");
+	printf("||   7、生成运算题目   ||\n");
 	printf("||-----0、退出系统-----||\n");
 	printf("||*********************||\n");
 }
@@ -101,14 +102,40 @@ int y_Xj()
 	system("cls"); 
 	return yxj;
 }
+
+//打印方式
+int print()
+{
+	int pt=1;
+	cout << "  1.输出到文本文档" << endl;
+	cout << "  2.输出到word文档" << endl;
+	cout << "(默认输出到文本文档）" << endl;
+	cin>>pt;
+	system("pause"); 
+	system("cls"); 
+	return pt;
+}
+
+
 //生成符合条件的题目
-void f_S(double a, double b, double c, double max, char fh, int n, int xs, int x,char dy[])
+void f_S(double a, double b, double c, double max, char fh, int n, int xs, int x,int pt,char dy[])
 {
 	FILE *fp;
-	if((fp=fopen("D:\\1.txt","w"))==NULL)
+	if(pt==1)
 	{
-		printf("can't open file!\n");
-		exit(0);
+		if((fp=fopen("D:\\1.txt","w"))==NULL)
+		{
+			printf("can't open file!\n");
+			exit(0);
+		}
+	}
+	else
+	{
+		if((fp=fopen("D:\\1.doc","w"))==NULL)
+		{
+			printf("can't open file!\n");
+			exit(0);
+		}
 	}
 	int i = 0;
 	while (i != n)
@@ -125,32 +152,32 @@ void f_S(double a, double b, double c, double max, char fh, int n, int xs, int x
 				{ 
 					printf("%d %c ( %d %c %d )=	", (int)a, fh, (int)b, fh, (int)c);
 					printf("\t");
-					fprintf(fp,"%d %c ( %d %c %d )=	", (int)a, fh, (int)b, fh, (int)c);
+					fprintf(fp,"%d %c ( %d %c %d )=\t", (int)a, fh, (int)b, fh, (int)c);
 				}
 				else if(xs==2 && (q%2==0)) 
 				{ 
 					printf("( %d %c %d ) %c %d =	", (int)a, fh, (int)b, fh, (int)c);
 					printf("\t");
-					fprintf(fp,"( %d %c %d ) %c %d =	", (int)a, fh, (int)b, fh, (int)c); 
+					fprintf(fp,"( %d %c %d ) %c %d =\t", (int)a, fh, (int)b, fh, (int)c); 
 				}
 				else if(xs == 1 && (q%2==1)) 
 				{  
 					printf("%.1f %c ( %.1f %c %.1f) =	", a, fh, b, fh, c);
 					printf("\t");
-					fprintf(fp,"%.1f %c ( %.1f %c %.1f) =	", a, fh, b, fh, c); 
+					fprintf(fp,"%.1f %c ( %.1f %c %.1f) =\t", a, fh, b, fh, c); 
 				}
 				else if(xs == 1 && (q%2==0)) 
 				{  
 					printf("(%.1f %c %.1f ) %c %.1f =	", a, fh, b, fh, c);
 					printf("\t");
-					fprintf(fp,"(%.1f %c %.1f ) %c %.1f =	", a, fh, b, fh, c); 
+					fprintf(fp,"(%.1f %c %.1f ) %c %.1f =\t", a, fh, b, fh, c); 
 				}
 			  break;
 		case 2: if (xs == 2) 
 				{
 					printf("%d %c %d %c %d =	", (int)a, fh, (int)b, fh, (int)c);
 					printf("\t");
-					fprintf(fp,"%d %c %d %c %d =	", (int)a, fh, (int)b, fh, (int)c);
+					fprintf(fp,"%d %c %d %c %d =\t", (int)a, fh, (int)b, fh, (int)c);
 				}
 			  else 
 				{ 
@@ -163,15 +190,22 @@ void f_S(double a, double b, double c, double max, char fh, int n, int xs, int x
 		i++;
 		if (i % 5 == 0) {cout << endl; fprintf(fp,"\n");}
 	}
-		cout<<"需要打印到文件上吗？"<<endl;
+		cout<<"需要输出到文件上吗？"<<endl;
 		cout<<"1.需要"<<endl;
 		cout<<"2.不需要"<<endl;
 		int xy;
 		cin>>xy;
 		fclose(fp);
-		if(xy==2) {fp=fopen("D:\\1.txt","w");fclose(fp);}
-		else if(xy==1) cout<<"打印成功!"<<endl;
-		else {printf("输入有误！");fp=fopen("D:\\1.txt","w");fclose(fp);}
+		if(pt==1&&xy==2) {fp=fopen("D:\\1.txt","w");fclose(fp);}
+		else if(pt==2&&xy==2) {fp=fopen("D:\\1.doc","w");fclose(fp);}
+		else if(xy==1) cout<<"输出成功!"<<endl;
+		else 
+		{
+			printf("输入有误！");
+			if(pt==1)fp=fopen("D:\\1.txt","w");
+			else fp=fopen("D:\\1.doc","w");
+			fclose(fp);
+		}
 	system("pause"); 
 	system("cls"); 
 }
@@ -179,7 +213,7 @@ void f_S(double a, double b, double c, double max, char fh, int n, int xs, int x
 
 int main()
 {
-	char fh = '+'; int s=0, n = 50, xs = 2, x = 2; double max, a=0, b=0, c=0; max = 100;
+	char fh = '+'; int pt=1, s=0, n = 50, xs = 2, x = 2; double max, a=0, b=0, c=0; max = 100;
 	char dy[1000];
 	while (1)
 	{
@@ -204,10 +238,10 @@ int main()
 			x = y_Xj();
 			break;
 		case 6:
-			f_S(a, b, c, max, fh, n, xs, x,dy);
+			pt=print();
 			break;
 		case 7:
-
+			f_S(a, b, c, max, fh, n, xs, x,pt,dy);
 			break;
 		case 0:
 			return 0;
