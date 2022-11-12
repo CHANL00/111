@@ -1,0 +1,448 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string>
+#define MAX 2000
+
+struct Student
+{
+	char c_Name[10];
+	char c_Num[15];
+	char c_Phone[15];
+	char c_Qsh[10];
+	char c_Sdate[10];
+	char c_Tjd[50];
+	char c_Ym[5];
+	char c_Tw[20];
+}StuP[MAX];
+
+//计算整数部分位数
+int ws(int n)
+{
+	int c=0;
+	while(n!=0)
+	{
+		n=n/10;
+		c++;
+	}
+	return c;
+}
+
+int i=0;int m_Size=0;int t_Size=0;
+//添加学生信息函数
+void addStudent()
+{
+	FILE *fp;int t=0;
+	fp=fopen("D:\\student.txt","a+");
+	printf("请输入姓名\n");
+	scanf("%s",StuP[m_Size].c_Name);
+	if(fprintf(fp,"%s ",StuP[m_Size].c_Name)==-1) t=1;
+	printf("请输入学号\n");
+	scanf("%s",StuP[m_Size].c_Num);
+	if(fprintf(fp,"%s ",StuP[m_Size].c_Num)==-1) t=1;
+	printf("请输入联系电话\n");
+	scanf("%s",StuP[m_Size].c_Phone);
+	if(fprintf(fp,"%s ",StuP[m_Size].c_Phone)==-1) t=1;
+	printf("请输入寝室号\n");
+	scanf("%s",StuP[m_Size].c_Qsh);
+	if(fprintf(fp,"%s ",StuP[m_Size].c_Qsh)==-1) t=1;
+	printf("请输入入校日期\n");
+	scanf("%s",StuP[m_Size].c_Sdate);
+	if(fprintf(fp,"%s ",StuP[m_Size].c_Sdate)==-1) t=1;
+	printf("请输入途经地\n");
+	scanf("%s",StuP[m_Size].c_Tjd);
+	if(fprintf(fp,"%s ",StuP[m_Size].c_Tjd)==-1) t=1;
+	printf("请输入是否疫苗\n");
+	scanf("%s",StuP[m_Size].c_Ym);
+	if(fprintf(fp,"%s ",StuP[m_Size].c_Ym)==-1) t=1;
+	printf("请输入三天内的体温记录\n");
+	scanf("%s",StuP[m_Size].c_Tw);
+	if(fprintf(fp,"%s ",StuP[m_Size].c_Tw)==-1) t=1;
+	if(t) printf("file write error\n");
+	else printf("学生信息存储成功！\n");
+	fclose(fp);
+	i++;m_Size++;
+	system("pause");
+	system("CLS");
+}
+
+//读取学生信息函数
+void readStudent()
+{
+	
+	struct Student Stud;
+	int i=0,t=0;
+	FILE *fp;
+	if((fp=fopen("D:\\student.txt","rb"))==NULL)
+	{
+		printf("can't open file!\n");
+		exit(0);
+	}
+	while(1)
+	{
+		if(fscanf(fp,"%s %s %s %s %s %s %s %s",StuP[i].c_Name,StuP[i].c_Num,StuP[i].c_Phone,StuP[i].c_Qsh,StuP[i].c_Sdate,StuP[i].c_Tjd,StuP[i].c_Ym,StuP[i].c_Tw)==-1) break;
+		i++;
+	}
+	m_Size=i;
+	printf("成功读入学生信息！\n");
+	system("pause");
+	system("CLS");
+	fclose(fp);
+	
+}
+
+//显示所有学生信息函数
+void showStudent()
+{
+	
+	if (m_Size == 0)
+	{
+		printf("当前记录为空\n");
+	}
+	else
+	{
+		for (int l = 0; l <m_Size; l++)
+		{
+			printf("%d.",l+1);
+			printf("%s",StuP[l].c_Name);for(int i=0;i<(11-strlen(StuP[l].c_Name)-ws(l+1));i++) printf(" ");
+			printf("%s	",StuP[l].c_Num);
+			printf("%s	",StuP[l].c_Phone);
+			printf("%s	",StuP[l].c_Qsh);
+			printf("%s	",StuP[l].c_Sdate);
+			printf("%s ",StuP[l].c_Tjd);for(int i=0;i<(50-strlen(StuP[l].c_Tjd));i++) printf(" ");
+			printf("%s	",StuP[l].c_Ym);
+			printf("%s	",StuP[l].c_Tw);printf("\n");
+		}
+	}
+	system("pause");
+	system("cls");
+	
+
+}
+//查找学生信息下标
+int isN(char num[]) 
+{
+	for (int i = 0; i <m_Size; i++)
+	{
+		if (strcmp(StuP[i].c_Num,num)==0)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+//查找学生信息函数
+int findStudent(char num[])
+{
+	int r = isN(num);
+	if (r != -1)
+	{
+		printf("该学生学生信息为：");
+		printf("%s ",StuP[r].c_Name);
+		printf("%s ",StuP[r].c_Num);
+		printf("%s ",StuP[r].c_Phone);
+		printf("%s ",StuP[r].c_Qsh);
+		printf("%s ",StuP[r].c_Sdate);
+		printf("%s ",StuP[r].c_Tjd);
+		printf("%s ",StuP[r].c_Ym);
+		printf("%s ",StuP[r].c_Tw);printf("\n");
+	}
+	else
+	{
+		printf("查无此人\n");
+	}
+	system("pause"); 
+	system("cls"); 
+	return r;
+}
+//删除学生信息函数
+void deleteStudent(char num[])
+{
+	int r = isN(num);
+	FILE *fp;
+	
+	if (r != -1)
+	{
+		if((fp=fopen("D:\\student.txt","w+"))==NULL)
+	{
+		printf("can't open file!\n");
+		exit(0);
+	}
+		for (int i = 0; i < m_Size; i++)
+		{
+			if(i!=r) if(fprintf(fp,"%s %s %s %s %s %s %s %s ",StuP[i].c_Name,StuP[i].c_Num,StuP[i].c_Phone,StuP[i].c_Qsh,StuP[i].c_Sdate,StuP[i].c_Tjd,StuP[i].c_Ym,StuP[i].c_Tw)==-1) printf("file write error\n");
+		}
+		for (int i = r+1; i < m_Size; i++) StuP[i-1]=StuP[i];
+		m_Size--;fclose(fp);
+		printf("删除该学生信息成功\n"); 
+	}
+	else
+	{
+		printf("查无此人\n");
+	}
+	
+	system("pause"); 
+	system("cls"); 
+}
+
+//修改学生信息函数
+void alterStudent(char num[])
+{
+	int r = isN(num);
+	FILE *fp;Student studt;
+	if (r != -1)
+	{
+	while(true)
+	{
+	system("cls");
+	void alterMenu();
+	alterMenu();
+	int s;
+	scanf("%d",&s);
+	switch(s)
+	{
+		case 1:
+			printf("请输入姓名\n");
+			scanf("%s",StuP[r].c_Name);
+			printf("请输入学号\n");
+			scanf("%s",StuP[r].c_Num);
+			printf("请输入联系电话\n");
+			scanf("%s",StuP[r].c_Phone);
+			printf("请输入寝室号\n");
+			scanf("%s",StuP[r].c_Qsh);
+			printf("请输入入校日期\n");
+			scanf("%s",StuP[r].c_Sdate);
+			printf("请输入途经地\n");
+			scanf("%s",StuP[r].c_Tjd);
+			printf("请输入是否疫苗\n");
+			scanf("%s",StuP[r].c_Ym);
+			printf("请输入三天内的体温记录\n");
+			scanf("%s",StuP[r].c_Tw);
+			break;
+		case 2:
+			printf("请输入姓名\n");
+			scanf("%s",StuP[r].c_Name);
+			break;
+		case 3:
+			printf("请输入学号\n");
+			scanf("%s",StuP[r].c_Num);
+			break;
+		case 4:
+			printf("请输入联系电话\n");
+			scanf("%s",StuP[r].c_Phone);
+			break;
+		case 5:
+			printf("请输入寝室号\n");
+			scanf("%s",StuP[r].c_Qsh);
+			break;
+		case 6:
+			printf("请输入入校日期\n");
+			scanf("%s",StuP[r].c_Sdate);
+			break;
+		case 7:
+			printf("请输入途经地\n");
+			scanf("%s",StuP[r].c_Tjd);
+			break;
+		case 8:
+			printf("请输入是否疫苗\n");
+			scanf("%s",StuP[r].c_Ym);
+			break;
+		case 9:
+			printf("请输入三天内的体温记录\n");
+			scanf("%s",StuP[r].c_Tw);
+			break;
+		case 0:
+			system("cls");
+			goto alter;
+			break;
+		default:
+			break;
+	}
+	}
+	while(false)//只有保存才能执行这里
+	{
+	alter:
+		if((fp=fopen("D:\\student.txt","wb+"))==NULL)
+		{
+			printf("can't open file!\n");
+			exit(0);
+		}
+		for (int i = 0; i < m_Size; i++)
+		{
+			if(fprintf(fp,"%s %s %s %s %s %s %s %s ",StuP[i].c_Name,StuP[i].c_Num,StuP[i].c_Phone,StuP[i].c_Qsh,StuP[i].c_Sdate,StuP[i].c_Tjd,StuP[i].c_Ym,StuP[i].c_Tw)==-1) printf("file write error\n");
+		}
+		fclose(fp);
+		printf("保存学生信息成功！\n"); 
+		system("pause"); 
+		system("cls"); 
+		return;
+	}
+	}
+	system("pause"); 
+	system("cls"); 
+	}
+	
+//筛选学生信息函数
+void siftStudent()
+{
+	printf("请输入您要关注的途径地\n" );
+	char tjd[10];
+	char qsh_1[50][10];
+	char qsh[50][10];
+	int c=0,l=0;
+	scanf("%s",tjd);
+	for (int i = 0; i < m_Size; i++)
+	{
+		int t=0,w=0;
+		for(int j=0;(StuP[i].c_Tjd[j]!='\0'&&tjd[t]!='\0');j++)
+		{
+			if(StuP[i].c_Tjd[j]==tjd[t]) w=1,t++;
+			else if(w==1) if(StuP[i].c_Tjd[j]==tjd[t]) w=1;
+			else t=0,w=0;
+		}
+		if(w==1) strcpy(qsh_1[c],StuP[i].c_Qsh),c++;
+	}
+	int i,j,t,f=0,n=0;
+	for(i=0;i<c;i++)
+		{
+			t=0;
+			for(j=0;j<50;j++)
+			if(strcmp(qsh_1[i],qsh[j])==0) t=1;
+			if(t==0) {strcpy(qsh[n],qsh_1[i]);n++;}
+		}
+	if(c==0) j=c;
+	else j=n-1;
+	FILE *fp;
+	fp=fopen("D:\\guanzhu.txt","ab+");
+	for(i=0;i<m_Size;i++)
+		for(int w=0;w<=j;w++)
+			if(strcmp(StuP[i].c_Qsh,qsh[w])==0) 
+			{
+				if(fprintf(fp,"%s %s ",StuP[i].c_Name,StuP[i].c_Qsh)==-1) printf("file write error\n");
+				else l++;
+			}
+	printf("新增关注%d名学生成功！\n",l);
+	fclose(fp);
+	system("pause"); 
+	system("cls"); 
+}
+
+//主菜单界面
+void showZMenu()
+{
+	printf("||*************************||\n");
+	printf("||-----1、添加学生信息-----||\n");
+	printf("||-----2、读取学生信息-----||\n");
+	printf("||-----0、退出管理系统-----||\n");
+	printf("||*************************||\n");
+}
+
+//读取文件数据后的菜单界面
+void showRMenu()
+{
+	printf("||*********************||\n");
+	printf("||   1、添加学生信息   ||\n");
+	printf("||   2、显示学生信息   ||\n");
+	printf("||   3、查找学生信息   ||\n");
+	printf("||   4、筛选学生信息   ||\n");
+	printf("||----0、返回主菜单----||\n");
+	printf("||*********************||\n");
+}
+
+//查找学生信息后的执行界面
+void showFMenu()
+{
+	printf("||***************************||\n");
+	printf("||1------删除该学生信息------||\n");
+	printf("||2------修改该学生信息------||\n");
+	printf("||0--------返回上一级--------||\n");
+	printf("||***************************||\n");
+}
+
+//修改学生信息的界面
+void alterMenu()
+{
+	printf("||*****************************||\n");
+	printf("||1------修改该生全部信息------||\n");
+	printf("||2------修改该学生的姓名------||\n");
+	printf("||3------修改该学生学号码------||\n");
+	printf("||4------修改该生电话号码------||\n");
+	printf("||5------修改该生寝室号码------||\n");
+	printf("||6------修改该生入校日期------||\n");
+	printf("||7------修改该生途经地点------||\n");
+	printf("||8------修改疫苗接种情况------||\n");
+	printf("||9------修改三天内体温表------||\n");
+	printf("||0------------保存------------||\n");
+	printf("||*****************************||\n");
+}
+
+
+int main()
+{
+	int s;
+part:
+	while(true)
+	{
+		showZMenu();
+		scanf("%d",&s);
+		switch (s)
+		{
+		case 1:
+			addStudent();
+			break;
+		case 2:
+			alter:
+			readStudent();
+			while (true)
+			{
+				showRMenu();
+				scanf("%d",&s);
+				switch (s)
+				{
+				case 1:
+					addStudent();
+					break;
+				case 2:
+					showStudent();
+					break;
+				case 3:
+					printf("请输入您要查找的学生学号\n" );
+					char num[20];
+					scanf("%s",num);
+					if(findStudent(num)!=-1) showFMenu();
+					else break;
+					scanf("%d",&s);
+					switch (s)
+					{
+					case 1:
+						deleteStudent(num);
+						break;
+					case 2:
+						alterStudent(num);
+						break;
+					case 0:
+						system("cls"); 
+						break;
+					default:
+						break;
+					}
+					break;
+				case 4:
+					siftStudent();
+					break;
+				case 0:
+					system("cls"); 
+					goto part;
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+		case 0:
+			return 0;
+			break;
+		default:
+			break;
+		}
+	}
+}
